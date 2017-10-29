@@ -1,15 +1,19 @@
 import React, { Component, PureComponent } from 'react'
 import CompareArea from './CompareArea.jsx';
 import tiny from 'tinycolor2';
+import throttle from 'lodash'
 
 export class Home extends (PureComponent || Component){
     constructor(props){
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this)
+        this.handleBlurChange = this.handleBlurChange.bind(this)
         this.state = {
-            currentColor: "#FF0000"
+            currentColor: "#FF0000",
+            blurColor:"#FF0000"
         }
+     
     }
 
     handleChange  (data, e){
@@ -22,18 +26,26 @@ export class Home extends (PureComponent || Component){
         
     }
     handleInputChange (e){
-        const  value = tiny(e.target.value);
-       // if(value.isValid()){
-            this.setState({
-                currentColor: e.target.value
+       
+       this.setState({
+                blurColor: e.target.value
             })
-       // }
+    
+    }
+    handleBlurChange (e){
+        if(tiny(this.state.blurColor).isValid()){
+            this.setState({
+                currentColor: this.state.blurColor,
+                blurColor: null
+            })
+        }
+        
     }
     render(){
         const color = tiny(this.state.currentColor);
         return(
             <div>
-                <input value ={this.state.currentColor} onChange={this.handleInputChange}/>
+                <input value ={this.state.blurColor} onBlur={ this.handleBlurChange}onChange={this.handleInputChange}/>
                 <CompareArea onChange = {this.handleChange} rgb = {color.toRgb()} hsv={color.toHsv()} hex={color.toHex()} />
             </div>
         )
