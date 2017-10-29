@@ -1,29 +1,67 @@
 import React from 'react';
-import className from 'className';
 
-const LabelMap ={
-
-}
-const DescMap = {
-    
-}
-class InputArea extends React.Component{
+export class InputArea extends React.Component{
     constructor(props){
         super(props);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChange = this.handleChange.bind(this)
+        this.handleBlur = this.handleBlur.bind(this)
+        this.state = {
+            value: String(props.value).toUpperCase(),
+            blurValue: String(props.value).toUpperCase()
+        }
+    }
+
+    componentWillReceiveProps(nextProps){
+        const input = this.input;
+        if (nextProps.value !== this.state.value){
+            if (input === document.activeElement){
+                this.setState({
+                    blurState: String(nextProps.value)
+                })   
+            } else { 
+                 this.setState({value: String(nextProps.value).toUpperCase(), blurValue: !this.state.blurValue && String(nextProps.value).toUpperCase() })
+            }
+        }
+    }
+
+    componentWillUnmount(){
+        this.unbindEventListeners()
+    }
+    handleBlur () {
+        if(this.state.blurValue){
+            this.setState({
+                value: this.state.blurValue,
+                blurValue: null
+            })
+        }
     }
 
     handleChange(e){
-        this.props.onValueChange(e.target.value);
+        if (this.props.label){
+            this.props.onValueChange && this.props.onValueChange(
+                {[this.props.label] :e.target.value}, e
+            )
+        }else {
+            this.props.onValueChange(e.target.value, e);
+        }
+        this.setState({
+            value: e.target.value
+        })
+        e.preventDefault();
     }
+    
     render(){
-        const inputLabel = this.props.inputLabel;
         return(
             <div className="rc-editor-input">
-                <input className="rc-input" onChange={ this.handleChange }/>
-                <span className="rc-input-label">{LabelMap[inputLabel]}</span>
-                <span className="rc-input-desc">{DescMap[inputLabel]}</span>
+                <input 
+                    className="rc-input" 
+                    ref= {input => this.input=input}
+                    onChange={ this.handleChange } 
+                    onBlur = {this.handleBlur}
+                    value={this.state.value}/>
+                <span className="rc-input-label">{this.props.label}</span>
             </div>
         );
     }
 }
+export default  InputArea

@@ -1,5 +1,5 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Hello } from '../components/index';
+import { Home } from '../components/index';
 
-render(<Hello />, document.getElementById("root"));
+render(<Home />, document.getElementById("root"));
