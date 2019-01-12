@@ -26,7 +26,7 @@
     "react-dom": "^15.0.0",
     "style-loader":"^0.18.2",
     "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.9.1"
+    "webpack-dev-server": ">=3.1.11"
   },
   "bugs": {
     "url": "https://github.com/shirleyR/material_react_pra/issues"
